@@ -59,7 +59,7 @@ render() {
         return (
             <div>
                 <h1>Dashboard</h1>
-                <Link to='/wizard'><button>Add New Property</button></Link>
+                <Link to='/wizard/step1'><button>Add New Property</button></Link>
                 {mappedHouses}
             </div>
         )

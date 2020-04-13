@@ -1,54 +1,48 @@
 import React, { Component } from 'react'
+import {Link} from 'react-router-dom'
+import store, {ADD_IMAGE} from '../../store'
 
 export default class Step_2 extends Component {
     constructor(){
         super()
+        const reduxState = store.getState()
         this.state = {
-            name: '',
-            address: '',
-            city: '',
-            state: '',
-            zip: 0
+            img: reduxState?.img,
         }
     }
     
+    componentDidMount = () => {
+        store.subscribe((() => {
+            const reduxState = store.getState()
+            this.state = {
+                img: reduxState?.img
+            }
+        }))
+      }
+
     handleChange = e => {
        this.setState({[e.target.name]: e.target.value})
    }
-   
+
    handleClick = () => {
-       const {name, address, city, state, zip} = this.state
-       axios.post('/api/home', {
-           name,
-           address,
-           city,
-           state,
-           zip
-       }).then(response => {
-           this.setState({
-               name: '',
-               address: '',
-               city: '',
-               state: '',
-               zip: ''
-           })
-       }).catch(error => {
-           console.log(error)
-       })
-    }   
+    const reduxState = store.getState()
+    store.dispatch({
+        type: ADD_IMAGE,
+        payload: {
+            img: reduxState?.img
+        }
+    })
+}
+     
     
     render() {
-        const {name, address, city, state, zip} = this.state
+        const {img} = this.state
         return (
             <div>
                 Add New Listing
-                <input placeholder='Property Name' type='text' onChange={this.handleChange} name='name' value={name} />
-                <input placeholder='Address' type='text' onChange={this.handleChange} name='address' value={address} />
-                <input placeholder='City' type='text' onChange={this.handleChange} name='city' value={city} />
-                <input placeholder='State' type='text' onChange={this.handleChange} name='state' value={state} />
-                <input placeholder='Zip' type='text' onChange={this.handleChange} name='zip' value={zip} />
-                <Link to='/'><button onClick={this.handleClick}>
-                Complete</button></Link>
+                <input placeholder='Image' type='text' onChange={this.handleChange} name='img' value={img} />
+                <Link to='/wizard/step3'><button onClick={this.handleClick}>
+                Next Step</button></Link>
             </div>
         )
     }

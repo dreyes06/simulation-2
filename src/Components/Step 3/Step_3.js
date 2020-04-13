@@ -1,29 +1,47 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+import {Link } from 'react-router-dom'
 
 export default class Step_3 extends Component {
     constructor(){
         super()
         this.state = {
-            img: ''
+            mortgage: '',
+            rent: ''
         }
     }
-   
-componentDidMount = () => {
-    this.setState({img: this.props.img})
-}
-  
+
+    componentDidMount = () => {
+        let { mortgage, rent } = this.props
+        this.setState({ mortgage, rent })
+      }
+
     handleChange = e => {
-       this.setState({[e.target.name]: e.target.value})
-   }
-   
-  
+        this.setState({[e.target.name]: e.target.value})
+    }
+    
+    handleClick = () => {
+        const {mortgage, rent} = this.state
+        axios.post('/api/home', {
+            mortgage,
+            rent
+        }).then(response => {
+            this.setState({
+                mortgage: '',
+                rent: ''
+            })
+        }).catch(error => {
+            console.log(error)
+        })
+     }
     
     render() {
-        const {img} = this.state
+        const {mortgage, rent} = this.state
         return (
             <div>
                 Add New Listing
-                <input placeholder='Property Name' type='text' onChange={this.handleChange} name='img' value={img} />
+                <input placeholder='Monthly Mortgage' type='text' onChange={this.handleChange} name='mortgage' value={mortgage} />
+                <input placeholder='Desired Rent' type='text' onChange={this.handleChange} name='rent' value={rent} />
                 <Link to='/'><button onClick={this.handleClick}>
                 Complete</button></Link>
             </div>
